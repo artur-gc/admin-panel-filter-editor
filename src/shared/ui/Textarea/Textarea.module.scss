@@ -1,0 +1,60 @@
+.container {
+    position: relative;
+    width: 100%;
+
+    .label {
+        color: #ccc;
+        font-size: 14px;
+    }
+
+    .textarea {
+        width: inherit;
+        padding: 10px 12px;
+        border-radius: 12px;
+        color: black;
+        font-size: 14px;
+        background: white;
+        border: 2px solid rgba(128, 128, 128, 0.178);
+        outline: none;
+        resize: none;
+        overflow-x: hidden;
+
+        &::placeholder {
+            color: #ccc;
+            font-size: 14px;
+        }
+    }
+
+    .counter {
+        margin-left: auto;
+        width: max-content;
+        padding-right: 5px;
+    }
+}
+
+.container.incorrect {
+    .label {
+        color: #ff2d2e;
+    }
+
+    .textarea {
+        border-color: #ff2d2e;
+        background-color: rgba(213, 57, 60, 0.16);
+
+        &::placeholder {
+            color: #ff2d2e;
+        }
+
+        &:focus {
+            border-color: #ff2d2e;
+        }
+    }
+
+    .error {
+        position: absolute;
+        bottom: 0;
+        font-size: 12px;
+        line-height: 16px;
+        color: #ff2d2e;
+    }
+}

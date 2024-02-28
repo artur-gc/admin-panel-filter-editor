@@ -1,0 +1,153 @@
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f175;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background: #88888880;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    padding: 50px 100px;
+    display: flex;
+    align-items: start;
+    gap: 200px;
+    background-color: #d3d3d321;
+}
+
+.filterEditorContainer {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.btnContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.addFilterToListBtn {
+    width: 100%;
+}
+
+.locationItemNameContainer {
+    display: flex;
+}
+
+.locationsContainer {
+    background-color: white;
+    height: 500px;
+    padding: 15px;
+    overflow-y: auto;
+    border-radius: 15px;
+    border: 1px solid gray;
+}
+
+.locationKeyContainer {
+    display: flex;
+    border-top: 1px solid #cacaca;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.locationNameContainer {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    align-self: center;
+}
+
+.editBtn {
+    padding: 10px;
+    display: flex;
+    color: white;
+    background-color: #4739c6;
+    border-radius: 10px;
+
+    &:hover {
+        background: #6c61d1;
+    }
+
+    &:active {
+        background: #32288b;
+    }
+}
+
+.uploadButtonLabel {
+    position: relative;
+}
+
+.uploadButtonSpan {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.uploadFiltersDataBtn {
+    background-color: #4739c6;
+    color: white;
+    padding: 14px 16px;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background: #6c61d1;
+    }
+
+    &:active {
+        background: #32288b;
+    }
+}
+
+.uploadButtonLabel:hover .uploadFiltersDataBtn {
+    background: #6c61d1;
+}
+
+.deleteBtn {
+    cursor: pointer;
+    margin-left: 10px;
+    align-self: center;
+}
+
+.deleteBtn {
+    padding: 10px;
+    color: white;
+    background-color: red;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        filter: brightness(120%);
+    }
+}
+
+.newIndexContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}

@@ -1,0 +1,65 @@
+.text {
+    &.primary {
+        color: white;
+    }
+
+    &.secondary {
+        color: #ccc;
+    }
+
+    &.inverted {
+        color: #19161d;
+    }
+
+    &.invertedGray {
+        color: #53575a;
+    }
+
+    &.xs {
+        font-size: 12px;
+    }
+
+    &.s {
+        font-size: 14px;
+    }
+
+    &.m {
+        font-size: 16px;
+    }
+
+    &.fs-18 {
+        font-size: 18px;
+    }
+
+    &.l {
+        font-size: 22px;
+    }
+
+    &.xl {
+        font-size: 30px;
+    }
+
+    &.xxl {
+        font-size: 40px;
+    }
+
+    &.light {
+        font-weight: 300;
+    }
+
+    &.regular {
+        font-weight: 400;
+    }
+
+    &.medium {
+        font-weight: 500;
+    }
+
+    &.semi-bold {
+        font-weight: 600;
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+}
