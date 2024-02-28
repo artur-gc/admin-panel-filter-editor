@@ -9,7 +9,7 @@ import { updateFiltersData } from "../model/updateFiltersData"
 import { Loader } from "../../shared/ui/Loader/Loader"
 
 interface ILocationsForFilterProps {
-    [key: string]: string[]
+    filters: { [key: string]: string[] }
 }
 
 export function FilterEditorPage() {
@@ -23,9 +23,18 @@ export function FilterEditorPage() {
     const [isShownAuthPrompt, setIsShownAuthPrompt] = useState<boolean>(false)
     const [authHeader, setAuthHeader] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [expandedKey, setExpandedKey] = useState<string | null>(null)
 
     function handleAuthPrompt() {
         setIsShownAuthPrompt(true)
+    }
+
+    function toggleExpandLocation(key: string) {
+        if (expandedKey === key) {
+            setExpandedKey(null)
+        } else {
+            setExpandedKey(key)
+        }
     }
 
     useEffect(() => {
@@ -56,39 +65,39 @@ export function FilterEditorPage() {
         }
     }, [isShownAuthPrompt])
 
-    function downloadFiltersData() {
-        const dataStr = JSON.stringify(filterData, null, 2)
-        const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`
-        const exportFileDefaultName = "filters-data.json"
-        const linkElement = document.createElement("a")
-        linkElement.setAttribute("href", dataUri)
-        linkElement.setAttribute("download", exportFileDefaultName)
-        linkElement.click()
-    }
+    // function downloadFiltersData() {
+    //     const dataStr = JSON.stringify(filterData, null, 2)
+    //     const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`
+    //     const exportFileDefaultName = "filters-data.json"
+    //     const linkElement = document.createElement("a")
+    //     linkElement.setAttribute("href", dataUri)
+    //     linkElement.setAttribute("download", exportFileDefaultName)
+    //     linkElement.click()
+    // }
 
-    function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
-        const file = event.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = e => {
-                const content = e?.target?.result as string
-                try {
-                    const jsonData = JSON.parse(content)
-                    setFilterData(jsonData)
-                } catch (error) {
-                    console.error("Error parsing JSON:", error)
-                }
-            }
-            reader.readAsText(file)
-        }
-    }
+    // function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    //     const file = event.target.files?.[0]
+    //     if (file) {
+    //         const reader = new FileReader()
+    //         reader.onload = e => {
+    //             const content = e?.target?.result as string
+    //             try {
+    //                 const jsonData = JSON.parse(content)
+    //                 setFilterData(jsonData)
+    //             } catch (error) {
+    //                 console.error("Error parsing JSON:", error)
+    //             }
+    //         }
+    //         reader.readAsText(file)
+    //     }
+    // }
 
     async function handleUpdateFilterData() {
         console.log("handleUpdateFilterData")
         const authHeader = await prompt("Please enter the authorization header:")
         try {
-            if (filterData === null) {
-                return
+            if (!filterData) {
+                return null
             }
             const updatedData = await updateFiltersData(authHeader || "", filterData)
             console.log("Updated filters data:", updatedData)
@@ -98,17 +107,22 @@ export function FilterEditorPage() {
     }
 
     function addOrUpdateLocation(mainLocation: string, locationsArray: string[]) {
-        const updatedLocationsState = {
-            ...filterData,
-            [mainLocation]: locationsArray,
-        }
+        const updatedLocationsState = filterData
+            ? {
+                  filters: {
+                      ...filterData.filters,
+                      [mainLocation]: locationsArray,
+                  },
+              }
+            : { filters: { [mainLocation]: locationsArray } }
+
         setFilterData(updatedLocationsState)
     }
 
     function handleEdit(mainLocation: string) {
-        if (filterData && filterData[mainLocation]) {
+        if (filterData && filterData.filters[mainLocation]) {
             setMainInputValue(mainLocation)
-            setTextareaValue(filterData[mainLocation].join(",\n"))
+            setTextareaValue(filterData.filters[mainLocation].join(",\n"))
             setIsEditing(true)
             setSelectedKey(mainLocation)
         }
@@ -116,8 +130,9 @@ export function FilterEditorPage() {
 
     function handleDelete(mainLocation: string) {
         if (filterData) {
-            const { [mainLocation]: _, ...updatedLocationsState } = filterData
-            setFilterData(updatedLocationsState)
+            const updatedFilters = { ...filterData.filters }
+            delete updatedFilters[mainLocation]
+            setFilterData({ filters: updatedFilters })
         }
     }
 
@@ -135,20 +150,18 @@ export function FilterEditorPage() {
         addOrUpdateLocation(mainInputValue, locationArray)
 
         if (newIndex !== null && selectedKey && filterData) {
-            const keys = Object.keys(filterData)
-            const updatedLocationsState: ILocationsForFilterProps = {}
-            keys.forEach(key => {
-                if (key !== selectedKey) {
-                    updatedLocationsState[key] = filterData[key]
-                }
-            })
-            const orderedKeys = [...keys.filter(key => key !== selectedKey)]
+            const orderedKeys = Object.keys(filterData.filters).filter(key => key !== selectedKey)
             orderedKeys.splice(newIndex, 0, selectedKey)
-            orderedKeys.forEach(key => {
-                updatedLocationsState[key] = filterData[key]
-            })
+            const updatedFilters = orderedKeys.reduce<{ [key: string]: string[] }>((acc, key) => {
+                if (key === selectedKey) {
+                    acc[key] = locationArray
+                } else {
+                    acc[key] = filterData.filters[key]
+                }
+                return acc
+            }, {})
 
-            setFilterData(updatedLocationsState)
+            setFilterData({ filters: updatedFilters })
         }
 
         setMainInputValue("")
@@ -156,6 +169,20 @@ export function FilterEditorPage() {
         setIsEditing(false)
         setSelectedKey(null)
         setNewIndex(null)
+    }
+
+    function getNewFiltersData() {
+        setIsLoading(true)
+        getLocationData(authHeader)
+            .then(data => {
+                setFilterData(data)
+            })
+            .catch(error => {
+                console.error("Fetch error:", error)
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
     }
 
     if (isLoading) {
@@ -170,7 +197,6 @@ export function FilterEditorPage() {
         return (
             <div className={styles.loginContainer}>
                 <Button onClick={handleAuthPrompt}>Login to admin panel</Button>
-                <Button onClick={handleUpdateFilterData}>Upload new filters</Button>
             </div>
         )
     }
@@ -201,16 +227,19 @@ export function FilterEditorPage() {
                             <Input
                                 type="number"
                                 value={newIndex !== null ? newIndex.toString() : ""}
-                                onChange={e => setNewIndex(parseInt(e))}
+                                onChange={e => {
+                                    Number(e) >= 0 ? setNewIndex(parseInt(e)) : newIndex
+                                }}
                                 label="New index"
                                 theme="light"
+                                min={0}
                             />
                         </div>
                     )}
                 </div>
                 <div className={styles.locationsContainer}>
                     {filterData &&
-                        Object.entries(filterData).map(([key, value], index) => (
+                        Object.entries(filterData.filters).map(([key, value], index) => (
                             <div key={key} className={styles.locationsSubContainer}>
                                 <div className={styles.locationKeyContainer}>
                                     <div className={styles.locationNameContainer}>
@@ -245,27 +274,54 @@ export function FilterEditorPage() {
                                         Delete
                                     </span>
                                 </div>
-                                {value?.map((item, index) => (
+                                {expandedKey === key
+                                    ? value?.map((item, index) => (
+                                          <Typography
+                                              className={styles.locationListText}
+                                              size="s"
+                                              weight="medium"
+                                              key={`${item}-${index}`}
+                                              color="inverted"
+                                          >
+                                              {item}
+                                          </Typography>
+                                      ))
+                                    : value?.slice(0, 3).map((item, index) => (
+                                          <Typography
+                                              className={styles.locationListText}
+                                              size="s"
+                                              weight="medium"
+                                              key={`${item}-${index}`}
+                                              color="inverted"
+                                          >
+                                              {item}
+                                          </Typography>
+                                      ))}
+                                {value.length > 4 && (
                                     <Typography
-                                        className={styles.locationListText}
+                                        className={styles.showMoreLocations}
                                         size="s"
-                                        weight="medium"
-                                        key={`${item}-${index}`}
+                                        weight="bold"
                                         color="inverted"
+                                        onClick={() => toggleExpandLocation(key)}
                                     >
-                                        {item}
+                                        {expandedKey === key
+                                            ? "show less..."
+                                            : `and ${value.length - 3} more...`}
                                     </Typography>
-                                ))}
+                                )}
                             </div>
                         ))}
                 </div>
             </div>
 
             <div className={styles.btnContainer}>
-                <Button onClick={downloadFiltersData} className={styles.downloadFilterDataBtn}>
+                {/* <Button onClick={downloadFiltersData} className={styles.downloadFilterDataBtn}>
                     Download Filters Data
-                </Button>
-                <input
+                </Button> */}
+                <Button onClick={handleUpdateFilterData}>Send filters to database</Button>
+                <Button onClick={getNewFiltersData}>Get filters from database</Button>
+                {/* <input
                     type="file"
                     id="fileUpload"
                     style={{ display: "none" }}
@@ -275,7 +331,7 @@ export function FilterEditorPage() {
                 <label htmlFor="fileUpload" className={styles.uploadButtonLabel}>
                     <span className={styles.uploadButtonSpan} />
                     <button className={styles.uploadFiltersDataBtn}>Upload Filters Data</button>
-                </label>
+                </label> */}
                 <br />
             </div>
         </div>

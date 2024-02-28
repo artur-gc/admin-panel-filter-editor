@@ -17,7 +17,7 @@
 
 .container {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     padding: 50px 100px;
     display: flex;
     align-items: start;
@@ -35,6 +35,8 @@
 .btnContainer {
     display: flex;
     flex-direction: column;
+    max-width: 200px;
+    width: 100%;
     gap: 20px;
 }
 
@@ -143,6 +145,7 @@
 .newIndexContainer {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
 }
 
 .loginContainer {
@@ -150,4 +153,12 @@
     justify-content: center;
     align-items: center;
     margin-top: 100px;
+}
+
+.btn {
+    width: 173px;
+}
+
+.showMoreLocations {
+    cursor: pointer;
 }
