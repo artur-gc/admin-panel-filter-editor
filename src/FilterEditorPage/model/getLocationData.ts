@@ -1,13 +1,6 @@
-export async function getLocationData(authHeader: string) {
+export async function getLocationData() {
     try {
-        const response = await fetch(
-            "https://website-api.mangopond-520280d6.westus.azurecontainerapps.io/admin/filters",
-            {
-                headers: {
-                    Authorization: authHeader,
-                },
-            }
-        )
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/filters`, {})
         if (!response.ok) {
             throw new Error(`Network response was not ok: ${response.statusText}`)
         }

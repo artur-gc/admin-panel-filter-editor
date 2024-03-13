@@ -7,6 +7,7 @@ import { Typography } from "../../shared/ui/Typography/Typography"
 import { getLocationData } from "../model/getLocationData"
 import { updateFiltersData } from "../model/updateFiltersData"
 import { Loader } from "../../shared/ui/Loader/Loader"
+import { locationsForFilter } from "../const/const"
 
 interface ILocationsForFilterProps {
     filters: { [key: string]: string[] }
@@ -21,7 +22,7 @@ export function FilterEditorPage() {
     const [newIndex, setNewIndex] = useState<number | null>(null)
     const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
     const [isShownAuthPrompt, setIsShownAuthPrompt] = useState<boolean>(false)
-    const [authHeader, setAuthHeader] = useState<string>("")
+    // const [authHeader, setAuthHeader] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [expandedKey, setExpandedKey] = useState<string | null>(null)
 
@@ -39,26 +40,26 @@ export function FilterEditorPage() {
 
     useEffect(() => {
         const fetchAuthorization = async () => {
-            const authHeader = await prompt("Please enter the authorization header:")
-            if (authHeader) {
-                setAuthHeader(authHeader)
-                setIsLoading(true)
-                getLocationData(authHeader)
-                    .then(data => {
-                        setFilterData(data)
-                        setIsAuthorized(true)
-                    })
-                    .catch(error => {
-                        console.error("Fetch error:", error)
-                        setIsShownAuthPrompt(false)
-                    })
-                    .finally(() => {
-                        setIsLoading(false)
-                    })
-            } else {
-                setIsShownAuthPrompt(false)
-            }
+            // const authHeader = await prompt("Please enter the authorization header:")
+            // if (authHeader) {
+            // setAuthHeader(authHeader)
+            setIsLoading(true)
+            getLocationData()
+                .then(data => {
+                    setFilterData(data)
+                    setIsAuthorized(true)
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error)
+                    setIsShownAuthPrompt(false)
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
         }
+        setIsShownAuthPrompt(false)
+
+        // }
 
         if (isShownAuthPrompt) {
             fetchAuthorization()
@@ -93,14 +94,12 @@ export function FilterEditorPage() {
     // }
 
     async function handleUpdateFilterData() {
-        console.log("handleUpdateFilterData")
         const authHeader = await prompt("Please enter the authorization header:")
         try {
             if (!filterData) {
                 return null
             }
-            const updatedData = await updateFiltersData(authHeader || "", filterData)
-            console.log("Updated filters data:", updatedData)
+            await updateFiltersData(authHeader || "", filterData)
         } catch (error) {
             console.log("Update filter data error")
         }
@@ -173,7 +172,7 @@ export function FilterEditorPage() {
 
     function getNewFiltersData() {
         setIsLoading(true)
-        getLocationData(authHeader)
+        getLocationData()
             .then(data => {
                 setFilterData(data)
             })
@@ -184,6 +183,12 @@ export function FilterEditorPage() {
                 setIsLoading(false)
             })
     }
+
+    function resetFiltersDataToDefault() {
+        setFilterData(locationsForFilter as ILocationsForFilterProps)
+    }
+
+    console.log(filterData)
 
     if (isLoading) {
         return (
@@ -321,6 +326,8 @@ export function FilterEditorPage() {
                 </Button> */}
                 <Button onClick={handleUpdateFilterData}>Send filters to database</Button>
                 <Button onClick={getNewFiltersData}>Get filters from database</Button>
+                <Button onClick={resetFiltersDataToDefault}>Reset To Default</Button>
+
                 {/* <input
                     type="file"
                     id="fileUpload"
