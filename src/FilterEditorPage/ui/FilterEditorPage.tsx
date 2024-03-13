@@ -177,8 +177,7 @@ export function FilterEditorPage() {
                         <div className={styles.loginContainer}>
                             <Loader />
                         </div>
-                    ) : (
-                        filterData &&
+                    ) : filterData ? (
                         Object.entries(filterData.filters).map(([key, value], index) => (
                             <div key={key} className={styles.locationsSubContainer}>
                                 <div className={styles.locationKeyContainer}>
@@ -252,6 +251,8 @@ export function FilterEditorPage() {
                                 )}
                             </div>
                         ))
+                    ) : (
+                        <div>No data</div>
                     )}
                 </div>
             </div>
