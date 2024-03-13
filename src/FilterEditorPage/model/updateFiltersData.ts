@@ -20,3 +20,4 @@ export async function updateFiltersData(authHeader: string, filterData: ILocatio
         throw error
     }
 }
+//
