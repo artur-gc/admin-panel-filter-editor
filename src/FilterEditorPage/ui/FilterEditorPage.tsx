@@ -20,15 +20,8 @@ export function FilterEditorPage() {
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
     const [newIndex, setNewIndex] = useState<number | null>(null)
-    const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
-    const [isShownAuthPrompt, setIsShownAuthPrompt] = useState<boolean>(false)
-    // const [authHeader, setAuthHeader] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [expandedKey, setExpandedKey] = useState<string | null>(null)
-
-    function handleAuthPrompt() {
-        setIsShownAuthPrompt(true)
-    }
 
     function toggleExpandLocation(key: string) {
         if (expandedKey === key) {
@@ -39,59 +32,14 @@ export function FilterEditorPage() {
     }
 
     useEffect(() => {
-        const fetchAuthorization = async () => {
-            // const authHeader = await prompt("Please enter the authorization header:")
-            // if (authHeader) {
-            // setAuthHeader(authHeader)
-            setIsLoading(true)
-            getLocationData()
-                .then(data => {
-                    setFilterData(data)
-                    setIsAuthorized(true)
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error)
-                    setIsShownAuthPrompt(false)
-                })
-                .finally(() => {
-                    setIsLoading(false)
-                })
-        }
-        setIsShownAuthPrompt(false)
-
-        // }
-
-        if (isShownAuthPrompt) {
-            fetchAuthorization()
-        }
-    }, [isShownAuthPrompt])
-
-    // function downloadFiltersData() {
-    //     const dataStr = JSON.stringify(filterData, null, 2)
-    //     const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`
-    //     const exportFileDefaultName = "filters-data.json"
-    //     const linkElement = document.createElement("a")
-    //     linkElement.setAttribute("href", dataUri)
-    //     linkElement.setAttribute("download", exportFileDefaultName)
-    //     linkElement.click()
-    // }
-
-    // function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    //     const file = event.target.files?.[0]
-    //     if (file) {
-    //         const reader = new FileReader()
-    //         reader.onload = e => {
-    //             const content = e?.target?.result as string
-    //             try {
-    //                 const jsonData = JSON.parse(content)
-    //                 setFilterData(jsonData)
-    //             } catch (error) {
-    //                 console.error("Error parsing JSON:", error)
-    //             }
-    //         }
-    //         reader.readAsText(file)
-    //     }
-    // }
+        getLocationData()
+            .then(data => {
+                setFilterData(data)
+            })
+            .catch(error => {
+                console.error("Fetch error:", error)
+            })
+    }, [])
 
     async function handleUpdateFilterData() {
         const authHeader = await prompt("Please enter the authorization header:")
@@ -188,20 +136,10 @@ export function FilterEditorPage() {
         setFilterData(locationsForFilter as ILocationsForFilterProps)
     }
 
-    console.log(filterData)
-
     if (isLoading) {
         return (
             <div className={styles.loginContainer}>
                 <Loader />
-            </div>
-        )
-    }
-
-    if (!isAuthorized && !isShownAuthPrompt) {
-        return (
-            <div className={styles.loginContainer}>
-                <Button onClick={handleAuthPrompt}>Login to admin panel</Button>
             </div>
         )
     }
@@ -321,27 +259,12 @@ export function FilterEditorPage() {
             </div>
 
             <div className={styles.btnContainer}>
-                {/* <Button onClick={downloadFiltersData} className={styles.downloadFilterDataBtn}>
-                    Download Filters Data
-                </Button> */}
                 <Button onClick={handleUpdateFilterData}>Send filters to database</Button>
                 <Button onClick={getNewFiltersData}>Get filters from database</Button>
                 <Button onClick={resetFiltersDataToDefault}>Reset To Default</Button>
                 <Typography size="xxl" weight="semi-bold" color="inverted">
                     PRODUCTION ENVIRONMENT
                 </Typography>
-
-                {/* <input
-                    type="file"
-                    id="fileUpload"
-                    style={{ display: "none" }}
-                    onChange={handleFileUpload}
-                    accept=".json"
-                />
-                <label htmlFor="fileUpload" className={styles.uploadButtonLabel}>
-                    <span className={styles.uploadButtonSpan} />
-                    <button className={styles.uploadFiltersDataBtn}>Upload Filters Data</button>
-                </label> */}
                 <br />
             </div>
         </div>
