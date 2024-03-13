@@ -327,6 +327,9 @@ export function FilterEditorPage() {
                 <Button onClick={handleUpdateFilterData}>Send filters to database</Button>
                 <Button onClick={getNewFiltersData}>Get filters from database</Button>
                 <Button onClick={resetFiltersDataToDefault}>Reset To Default</Button>
+                <Typography size="xxl" weight="semi-bold" color="inverted">
+                    PRODUCTION ENVIRONMENT
+                </Typography>
 
                 {/* <input
                     type="file"
