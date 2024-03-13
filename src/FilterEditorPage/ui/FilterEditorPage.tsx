@@ -262,7 +262,7 @@ export function FilterEditorPage() {
                 <Button onClick={getNewFiltersData}>Get filters from database</Button>
                 <Button onClick={resetFiltersDataToDefault}>Reset To Default</Button>
                 <Typography size="xxl" weight="semi-bold" color="inverted">
-                    PRODUCTION ENVIRONMENT
+                    {import.meta.env.VITE_DEPLOY_MODE || "-"} ENVIRONMENT
                 </Typography>
                 <br />
             </div>
