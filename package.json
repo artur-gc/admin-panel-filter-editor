@@ -4,13 +4,13 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "VITE_API_URL=https://website-api.mangopond-520280d6.westus.azurecontainerapps.io VITE_DEPLOY_MODE=DEV vite",
-        "stage": "VITE_API_URL=https://website-api-staging.kindplant-05e87845.westus.azurecontainerapps.io VITE_DEPLOY_MODE=STAGING vite",
-        "prod": "VITE_API_URL=https://website-api.politerock-829f34d9.westus.azurecontainerapps.io VITE_DEPLOY_MODE=PROD vite",
+        "dev": "VITE_API_URL=https://website-api.mangopond-520280d6.westus.azurecontainerapps.io  vite",
+        "stage": "VITE_API_URL=https://website-api-staging.kindplant-05e87845.westus.azurecontainerapps.io  vite",
+        "prod": "VITE_API_URL=https://website-api.politerock-829f34d9.westus.azurecontainerapps.io  vite",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "build:dev": "VITE_API_URL=https://website-api.mangopond-520280d6.westus.azurecontainerapps.io VITE_DEPLOY_MODE=DEV vite build --mode development",
-        "build:stage": "VITE_API_URL=https://website-api-staging.kindplant-05e87845.westus.azurecontainerapps.io VITE_DEPLOY_MODE=STAGING vite build --mode staging",
-        "build:prod": "VITE_API_URL=https://website-api.politerock-829f34d9.westus.azurecontainerapps.io VITE_DEPLOY_MODE=PRODUCTION vite build --mode production",
+        "build:dev": "VITE_API_URL=https://website-api.mangopond-520280d6.westus.azurecontainerapps.io  vite build --mode development",
+        "build:stage": "VITE_API_URL=https://website-api-staging.kindplant-05e87845.westus.azurecontainerapps.io  vite build --mode staging",
+        "build:prod": "VITE_API_URL=https://website-api.politerock-829f34d9.westus.azurecontainerapps.io  vite build --mode production",
         "preview": "vite preview"
     },
     "dependencies": {
