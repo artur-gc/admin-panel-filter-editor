@@ -136,14 +136,6 @@ export function FilterEditorPage() {
         setFilterData(locationsForFilter as ILocationsForFilterProps)
     }
 
-    if (isLoading) {
-        return (
-            <div className={styles.loginContainer}>
-                <Loader />
-            </div>
-        )
-    }
-
     return (
         <div className={styles.container}>
             <div className={styles.filterEditorContainer}>
@@ -181,7 +173,12 @@ export function FilterEditorPage() {
                     )}
                 </div>
                 <div className={styles.locationsContainer}>
-                    {filterData &&
+                    {isLoading ? (
+                        <div className={styles.loginContainer}>
+                            <Loader />
+                        </div>
+                    ) : (
+                        filterData &&
                         Object.entries(filterData.filters).map(([key, value], index) => (
                             <div key={key} className={styles.locationsSubContainer}>
                                 <div className={styles.locationKeyContainer}>
@@ -254,7 +251,8 @@ export function FilterEditorPage() {
                                     </Typography>
                                 )}
                             </div>
-                        ))}
+                        ))
+                    )}
                 </div>
             </div>
 
